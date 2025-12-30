@@ -1,0 +1,44 @@
+path = 'C:\Users\Melis\Documents\MATLAB\LGG_resampled_data.csv';
+
+opts = detectImportOptions(path);
+opts.VariableNamingRule = 'preserve';
+
+data = readtable(path, opts);
+
+% Extract the column names for the data matrix, skipping the first and last columns
+colNames = data.Properties.VariableNames(2:end-1); % Skip first column (sample names) and last column (labels)
+
+% Extract the data matrix, skipping the first column (sample names) and the last column (labels)
+dataMatrix = data{:, 2:end-1};
+
+% Check if the data matrix is non-empty
+if isempty(dataMatrix)
+    error('Feature data is empty. Check the CSV format.');
+end
+
+% Extract the class labels from the last column
+Y = data{:, end}; % Labels are in the last column
+
+% Initialize vectors to store the k values and attribute weights
+kValues = 1:100;
+attributeWeights = zeros(size(dataMatrix, 2), numel(kValues));
+
+% Open a parallel pool (if not already open)
+if isempty(gcp('nocreate'))
+    parpool; 8 % Adjust the number of workers as needed based on your system's capabilities
+end
+
+% Perform relief feature selection for each k value using parfor
+parfor i = 1:numel(kValues)
+    k = kValues(i);
+    [~, weights] = relieff(dataMatrix, Y, k);
+    attributeWeights(:, i) = weights';
+end
+
+% Plot attribute weight versus k value
+figure;
+plot(kValues, attributeWeights, 'LineWidth', 0.5);
+xlabel('Number of k nearest neighbors');
+ylabel('Attribute Weight');
+title('Attribute Weight vs Number of k nearest neighbors');
+
