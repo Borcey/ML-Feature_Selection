@@ -8,11 +8,9 @@ The project focuses on reducing high-dimensional miRNA expression data into an i
 
 ## Data
 
-- miRNA expression data derived from LUAD cohorts  
+- miRNA expression data derived from TCGA-LUAD datasets  
 - Data preprocessing and normalization are performed prior to feature selection  
 - Raw and processed datasets are organized under the `data/` directory  
-
-> Note: Due to data access policies, raw datasets may not be publicly shared.
 
 ---
 
@@ -26,7 +24,10 @@ The following machine learning models are used for feature selection:
 - Boruta  
 - XGBoost  
 - LightGBM  
-- CatBoost  
+- CatBoost
+- Random Forest
+- ReliefF
+- SVM-RFE
 
 Each method provides an independent ranking or subset of informative miRNAs.
 
@@ -74,3 +75,4 @@ The main objective of this project is to identify a reduced and biologically mea
 
 - This repository is intended for research and educational purposes.  
 - The pipeline is modular and can be extended with additional models or datasets.
+- This project is supported by TÜBİTAK 2209-A - Undergraduate Research Projects Support Program
